@@ -10,13 +10,13 @@ import 'package:weather/models/weather_data.dart';
 class DataServices {
   //api call http get request using flutter http package
   static Future dataService(BuildContext context, String city) async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-    print(connectivityResult);
+    // var connectivityResult = await (Connectivity().checkConnectivity());
+    // print(connectivityResult);
 
     try {
       var queryparams = {
         'q': city,
-        'type': 'hour',
+        'units': 'metric',
         'appid': "97d4f397daf19870da2731ec44699c15",
       };
       var uri = Uri.https(Api.baseUrl, Api.path, queryparams);
@@ -25,7 +25,7 @@ class DataServices {
       print(response.statusCode);
       if (response.statusCode == 200) {
         // to convert json data using modal class method.
-        var jsonResponse = dataFromJson(response.body);
+        WeatherData jsonResponse = dataFromJson(response.body);
         print(jsonResponse);
         return jsonResponse;
       } else {

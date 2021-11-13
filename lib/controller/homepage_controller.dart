@@ -23,18 +23,24 @@ class HomepageController extends ControllerMVC {
   final GeolocatorPlatform geolocatorPlatform = GeolocatorPlatform.instance;
 
   String? city;
-  List data = [];
+  WeatherData? data;
+  MainObjData? mainObjData;
   bool isLoading = true;
 
   makeApiRequest(BuildContext context) async {
     getCurrentPosition(context).then((value) async {
-      final WeatherData dataItems =
-          await DataServices.dataService(context, value);
-      setState(() {
-        print(dataItems);
-        // data.addAll(dataItems.data);
-        isLoading = false;
-      });
+      if (value != null) {
+        WeatherData data = await DataServices.dataService(context, value);
+        setState(() {
+          print(data);
+          data = data;
+          mainObjData = data.main;
+          // data.addAll(dataItems.data);
+          isLoading = false;
+        });
+      } else {
+        print('object');
+      }
     });
   }
 
@@ -53,6 +59,6 @@ class HomepageController extends ControllerMVC {
         await placemarkFromCoordinates(position.latitude, position.longitude);
     city = placemarks[0].locality;
     print("city data" + city!);
-    return city!;
+    return city!.toLowerCase();
   }
 }
